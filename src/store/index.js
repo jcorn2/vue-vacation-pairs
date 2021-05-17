@@ -5,7 +5,7 @@ Vue.use(Vuex)
 
 const store = new Vuex.Store({
   state: {
-    roster: [],
+    roster: ['Mom', 'Dad', 'Mike', 'Betsy', 'Joe', 'Kristen', 'George', 'Erin', 'Greg', 'Mary', 'Zach', 'James'],
     days: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday'],
     pairs: []
   },
@@ -40,10 +40,10 @@ const store = new Vuex.Store({
       }
 
     },
-    divideInto3Pairs(state, num3Pairs, num2Pairs) {
-      for (let i = 0; i < num3Pairs; i++) {
+    divideInto3Pairs(state, {numThreeGroups, numTwoGroups}) {
+      for (let i = 0; i < numThreeGroups; i++) {
         const people = state.roster.splice(0, 3);
-        const day = state.days[i + num2Pairs];
+        const day = state.days[i + numTwoGroups];
         const group = {people, day};
 
         state.pairs.push(group);
@@ -61,7 +61,7 @@ const store = new Vuex.Store({
       const numTwoGroups = 5 - numThreeGroups;
 
       commit('divideInto2Pairs', numTwoGroups);
-      commit('divideInto3Pairs', numThreeGroups);
+      commit('divideInto3Pairs', {numThreeGroups, numTwoGroups});
 
       console.log(state.pairs);
     }
