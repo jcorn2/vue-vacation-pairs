@@ -5,14 +5,15 @@ Vue.use(Vuex)
 
 const store = new Vuex.Store({
   state: {
-    roster: ['Mom', 'Dad', 'Mike', 'Betsy', 'Joe', 'Kristen', 'George', 'Erin', 'Greg', 'Mary', 'Zach', 'James'],
-    days: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday'],
-    pairs: []
+    roster: [],
+    days: [{day: 'Sunday', order: 0}, {day: 'Monday', order: 1}, {day: 'Tuesday', order: 2}, {day: 'Wednesday', order: 3}, {day: 'Thursday', order: 4}],
+    pairs: [],
+    gifs: []
   },
   mutations: {
-    addPerson (state, person) {
-      console.log(person)
-      state.roster.push(person)
+    addPerson (state, name) {
+      console.log(state.gifs);
+      state.roster.push({name, avatar: state.gifs[state.roster.length + 1]})
     },
     shuffleRoster(state) {
       for(let i = state.roster.length - 1; i > 0; i--){
@@ -32,7 +33,7 @@ const store = new Vuex.Store({
     },
     divideInto2Pairs(state, num2Pairs) {
       for (let i = 0; i < num2Pairs; i++) {
-        const people = state.roster.splice(0, 2);
+        const people = state.roster.slice(i * 2, (i * 2) + 2);
         const day = state.days[i];
         const group = {people, day};
 
@@ -42,18 +43,27 @@ const store = new Vuex.Store({
     },
     divideInto3Pairs(state, {numThreeGroups, numTwoGroups}) {
       for (let i = 0; i < numThreeGroups; i++) {
-        const people = state.roster.splice(0, 3);
+        const people = state.roster.slice((numTwoGroups * 2) + (i*3), (numTwoGroups * 2) + (i*3) + 3);
         const day = state.days[i + numTwoGroups];
         const group = {people, day};
 
         state.pairs.push(group);
       }
-      console.log(state.pairs);
-
+    },
+    sortPairs(state) {
+      state.pairs.sort((a, b) => a.day.order - b.day.order);
+    },
+    clearPairs(state) {
+      state.pairs = [];
+    },
+    setGifs(state, gifs) {
+      state.gifs = gifs;
     }
   },
   actions: {
     generatePairs({commit, state}) {
+      commit('shuffleRoster');
+      commit('shuffleRoster');
       commit('shuffleRoster');
       commit('shuffleDays');
 
@@ -63,7 +73,17 @@ const store = new Vuex.Store({
       commit('divideInto2Pairs', numTwoGroups);
       commit('divideInto3Pairs', {numThreeGroups, numTwoGroups});
 
-      console.log(state.pairs);
+      commit('sortPairs');
+    },
+    regeneratePairs({commit, dispatch}) {
+      commit('clearPairs');
+      dispatch('generatePairs');
+    },
+    async fetchGifs({commit}) {
+      const response = await fetch(`https://api.giphy.com/v1/gifs/trending?api_key=${process.env.VUE_APP_GIPHY_API_KEY}&limit=50`);
+      const gifs = await response.json();
+      
+      commit('setGifs', gifs.data);
     }
   }
 })

@@ -12,17 +12,20 @@
       </div>
       <div>
         <h3>Roster</h3>
-        <div v-for="person in $store.state.roster" :key="person">
-          {{person}}
-        </div>
+        <PersonCard v-for="person in $store.state.roster" :key="person.name" :person="person"/>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import PersonCard from '@/components/PersonCard';
+
 export default {
   name: 'HelloWorld',
+  components: {
+    PersonCard
+  },
   data() {
     return {
       inputValue: ''
@@ -45,6 +48,10 @@ export default {
   display: flex;
   justify-content: space-around;
   padding: 2rem;
+}
+
+.content > div {
+  flex-basis: 50%;
 }
 
 .go-to-pairs {
