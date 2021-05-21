@@ -5,14 +5,16 @@
       <div class="left-side">
         <h3>Enter Name</h3>
         <div class="name-input">
-          <input type="text" placeholder="Enter name" v-model="inputValue">
+          <input type="text" placeholder="Enter name" v-model="inputValue" @keyup.enter="addPerson">
           <button @click="addPerson">Submit</button>
         </div>
         <button class="go-to-pairs" @click="generatePairs">Generate Pairs</button>
       </div>
-      <div>
+      <div class="roster">
         <h3>Roster</h3>
-        <PersonCard v-for="person in $store.state.roster" :key="person.name" :person="person"/>
+        <div class="roster-list">
+          <PersonCard v-for="person in $store.state.roster" :key="person.name" :person="person"/>
+        </div>
       </div>
     </div>
   </div>
@@ -57,5 +59,23 @@ export default {
 .go-to-pairs {
   margin-top: 2rem;
   padding: 1rem;
+}
+
+.roster {
+  max-height: 75vh;
+  overflow: auto;
+}
+
+.roster h3 {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    background-color: white;
+}
+
+.roster-list {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 </style>

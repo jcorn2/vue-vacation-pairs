@@ -12,7 +12,6 @@ const store = new Vuex.Store({
   },
   mutations: {
     addPerson (state, name) {
-      console.log(state.gifs);
       state.roster.push({name, avatar: state.gifs[state.roster.length + 1]})
     },
     shuffleRoster(state) {
@@ -62,6 +61,7 @@ const store = new Vuex.Store({
   },
   actions: {
     generatePairs({commit, state}) {
+      commit('clearPairs');
       commit('shuffleRoster');
       commit('shuffleRoster');
       commit('shuffleRoster');
