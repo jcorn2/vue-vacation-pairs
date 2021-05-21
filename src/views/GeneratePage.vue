@@ -2,9 +2,12 @@
   <div class="generate">
     <div class="header">
       <h1 class="title">Vacation Pairs</h1>
-      <button @click="regenerate" class="regenerate-button">Regenerate Pairs</button>
+      <button @click="regenerate" :disabled="countdown > 0" class="regenerate-button">Regenerate Pairs</button>
     </div>
-    <div class="pairs">
+    <div v-if="countdown > 0" class="countdown">
+      {{countdown}}
+    </div>
+    <div v-else class="pairs">
       <div v-for="group in $store.state.pairs" :key="group.day.day" class="pair">
         <span class="day-of-week">{{group.day.day}}</span>
         <PersonCard v-for="person in group.people" :key="person.name" :person="person"/>
@@ -20,12 +23,32 @@ export default {
   components: {
     PersonCard
   },
+  data() {
+    return {
+      countdown: 5,
+      interval: null
+    };
+  },
   created() {
     this.$store.dispatch('generatePairs')
+  },
+  mounted() {
+    this.startInterval();
   },
   methods: {
     regenerate() {
       this.$store.dispatch('regeneratePairs');
+      this.startInterval();
+    },
+    startInterval() {
+      this.countdown = 5;
+      this.interval = setInterval(() => {
+        this.countdown = this.countdown - 1;
+
+        if (this.countdown <= 0) {
+          clearInterval(this.interval);
+        }
+      }, 1000);
     }
   }
 }
@@ -62,6 +85,10 @@ export default {
   height: 2.5rem;
 }
 
+.regenerate-button:disabled {
+  opacity: 70%;
+}
+
 .header {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
@@ -70,5 +97,9 @@ export default {
 
 .title {
   grid-column: 2;
+}
+
+.countdown {
+  font-size: 40rem;
 }
 </style>
