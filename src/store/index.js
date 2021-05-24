@@ -80,7 +80,7 @@ const store = new Vuex.Store({
       dispatch('generatePairs');
     },
     async fetchGifs({commit}) {
-      const response = await fetch(`https://api.giphy.com/v1/gifs/trending?api_key=${process.env.VUE_APP_GIPHY_API_KEY}&limit=50`);
+      const response = await fetch(`https://api.giphy.com/v1/gifs/trending?api_key=${process.env.VUE_APP_GIPHY_API_KEY}&limit=50&rating=g`);
       const gifs = await response.json();
       
       commit('setGifs', gifs.data);

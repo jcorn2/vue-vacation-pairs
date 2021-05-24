@@ -1,6 +1,7 @@
 <template>
   <div id="app">
     <router-view></router-view>
+    <img src="@/assets/giphy.png" alt="">
   </div>
 </template>
 

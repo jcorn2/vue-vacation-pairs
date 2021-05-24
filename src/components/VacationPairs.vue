@@ -62,7 +62,7 @@ export default {
 }
 
 .roster {
-  max-height: 75vh;
+  max-height: 70vh;
   overflow: auto;
 }
 
